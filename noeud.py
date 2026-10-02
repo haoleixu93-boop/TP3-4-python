@@ -2,23 +2,54 @@ import math
 from matplotlib import pyplot as plt
 
 class Noeud : 
-    def __init__(self, noeud, liste_noeud):
+    """ Représente la classe Noeud d'une arbre d'expression """
+    def __init__(self, noeud, liste_noeud) :
+        """ Constructeur de la classe Noeud.
+        Paremètres : 
+        ---------------------
+        noeud : Noeud
+        liste : liste[Noeud] 
+        """
         self.noeud = noeud
         self.liste_noeud = liste_noeud
 
     def ajouter_noeud(self, n):
+        """ Ajoute un noeud dans la liste des noeuds.
+        Paramètres :
+        --------------------
+        n : Noeud
+        """
         if not isinstance (n, Noeud):
             raise TypeError("Il faut un noeud en paramètre !")
         self.liste_noeud.append(n)
 
     def afficher(self):
+        """Afficher l'expression mathématique.
+
+        Returns:
+            str: L'expression mathématique sous forme d'une affichage polonais.
+        """
         res = str(self.noeud)
         for enfant in self.liste_noeud:
             res = res + " " + enfant.afficher()
         return res
 
 
-    def evaluer(self, d):
+    def evaluer(self, d)->float:
+        """Evaluer l'expression symbolique pour une combinaison données des variables de l'expression.
+
+        Paramètres:
+            d (dict[str, int|float]): Contient les valeurs associées aux noms des variables.
+
+        Raises:
+            ValueError: LA variable n'est pas dans le dictionnaire d.
+            ValueError: Division par 0.
+            ValueError: Le logarithme exige une valeur strictement positive.
+            ValueError: Opérateur inconnu.
+
+        Returns:
+            float : Le résultat de l'expression symbolique.
+        """
         if isinstance(self.noeud, (int, float)):
             return float(self.noeud)
 
@@ -62,6 +93,12 @@ class Noeud :
             raise ValueError("Opérateur inconnu")
 
     def tracer(self,c,l):
+        """Tracer la fonction correspondant à l'expression symbolique.
+
+        Paramètres:
+            c (str): Variable qu'on souhaite tracer.
+            l (liste[int|float]): Liste de valeurs prises par c.
+        """
         y = []
         for v in l:
             res = self.evaluer({c: v})
